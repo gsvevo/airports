@@ -8,9 +8,11 @@
         maxZoom: 10,
         minZoom: 3,
         detectRetina: true});
-        L.tileLayer('http://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}@2x.png', {
-          attribution: 'Basemap <a href="http://bl.ocks.org/Xatpy/854297419bd7eb3421d0">CartoDB</a>'
-        }).addTo(mymap);
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png', {
+	attribution: '&copy; <a href="http://www.openstreetmap.org/copyright">OpenStreetMap</a> &copy; <a href="https://carto.com/attributions">CARTO</a>',
+	subdomains: 'abcd',
+	maxZoom: 19
+}).addTo(mymap);
     var airports = null;
     var colors = chroma.scale(['#007384', '#007384']).mode('hsl').colors(3);
     for (i = 0; i < 2; i++) {
@@ -71,16 +73,7 @@
     };
     legend.addTo(mymap);
     L.control.scale().addTo(mymap);
-    L.latlngGraticule({
-        showLabel: true,
-        opacity: 0.2,
-        color: "#747474",
-        zoomInterval: [
-            {start: 0, end: 7, interval: 5},
-            {start: 8, end: 10, interval: 2}
-        ]
-    }).addTo(mymap);
-     function addLabel(layer, id) {
+    function addLabel(layer, id) {
         var label = layer.getTooltip()._source._tooltip._container;
         if (label) {
             var rect = label.getBoundingClientRect();
@@ -111,3 +104,10 @@
         });
         labelEngine.update();
     });
+    
+    var controlSearch = new L.Control.Search({
+        layer: airports,
+        initial: false,
+        hideMarkerOnCollapse: true,
+        propertyName: 'AIRPT_NAME'})
+        mymap.addControl(controlSearch);
